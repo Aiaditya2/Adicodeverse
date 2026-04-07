@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Adi-CodeVerse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Adi-CodeVerse</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="editor.html">Editor</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="profile.html" class="btn">Profile</a></li>
+                <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Profile Section -->
+    <section class="dashboard">
+        <div class="container">
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <h2 class="profile-name" id="profileName">Loading...</h2>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="projectsCount">0</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="postsCount">0</div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="applicationsCount">0</div>
+                        <div class="stat-label">Applications</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Information -->
+            <div class="profile-section">
+                <h3>📝 Bio</h3>
+                <textarea id="userBio" class="profile-textarea" placeholder="Tell us about yourself..."></textarea>
+            </div>
+
+            <div class="profile-section">
+                <h3>🛠️ Skills</h3>
+                <input type="text" id="userSkills" class="profile-input" placeholder="e.g., JavaScript, React, CSS, Node.js...">
+            </div>
+
+            <div class="profile-section">
+                <h3>🌐 GitHub Profile</h3>
+                <input type="text" id="githubProfile" class="profile-input" placeholder="https://github.com/username">
+            </div>
+
+            <div class="profile-section">
+                <h3>💼 LinkedIn Profile</h3>
+                <input type="text" id="linkedinProfile" class="profile-input" placeholder="https://linkedin.com/in/username">
+            </div>
+
+            <div class="profile-section">
+                <h3>📍 Location</h3>
+                <input type="text" id="userLocation" class="profile-input" placeholder="City, Country">
+            </div>
+
+            <!-- Save Button -->
+            <div class="profile-save-button">
+                <button class="btn" onclick="updateProfile()">Save Profile Changes</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Adi-CodeVerse. All rights reserved.</p>
+            <p>Build Your Profile in One Universe 🚀</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="chatbot.js"></script>
+    <script>
+        // Profile specific functions
+        function loadProfile() {
+            const user = checkAuth();
+            if (!user) return;
+
+            // Load profile data
+            const profiles = JSON.parse(localStorage.getItem('profiles') || '{}');
+            const profile = profiles[user.username] || {
+                bio: '',
+                skills: '',
+                github: '',
+                linkedin: '',
+                location: ''
+            };
+
+            // Update UI
+            document.getElementById('profileName').textContent = user.username;
+            document.getElementById('userBio').value = profile.bio;
+            document.getElementById('userSkills').value = profile.skills;
+            document.getElementById('githubProfile').value = profile.github;
+            document.getElementById('linkedinProfile').value = profile.linkedin;
+            document.getElementById('userLocation').value = profile.location;
+
+            // Load statistics
+            loadUserStats();
+        }
+
+        function loadUserStats() {
+            const user = JSON.parse(localStorage.getItem('adiCodeverseCurrentUser') || '{}');
+            if (!user.username) return;
+
+            // Count projects
+            const projects = JSON.parse(localStorage.getItem('adiCodeverseProjects') || '[]');
+            const userProjects = projects.filter(p => p.username === user.username);
+            document.getElementById('projectsCount').textContent = userProjects.length;
+
+            // Count posts
+            const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+            const userPosts = posts.filter(p => p.author === user.username);
+            document.getElementById('postsCount').textContent = userPosts.length;
+
+            // Count job applications
+            const applications = JSON.parse(localStorage.getItem('jobApplications') || '[]');
+            const userApplications = applications.filter(a => a.username === user.username);
+            document.getElementById('applicationsCount').textContent = userApplications.length;
+        }
+
+        function updateProfile() {
+            const user = checkAuth();
+            if (!user) {
+                showToast('Please login to update profile', 'error');
+                return;
+            }
+
+            const profileData = {
+                bio: document.getElementById('userBio').value.trim(),
+                skills: document.getElementById('userSkills').value.trim(),
+                github: document.getElementById('githubProfile').value.trim(),
+                linkedin: document.getElementById('linkedinProfile').value.trim(),
+                location: document.getElementById('userLocation').value.trim(),
+                updatedAt: new Date().toISOString()
+            };
+
+            // Save profile data
+            const profiles = JSON.parse(localStorage.getItem('profiles') || '{}');
+            profiles[user.username] = profileData;
+            localStorage.setItem('profiles', JSON.stringify(profiles));
+
+            showToast('Profile updated successfully! ✨', 'success');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor - Adi-CodeVerse</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional styles for editor page */
+        .editor-header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .project-tabs {
+            background: var(--bg-secondary);
+            padding: 0.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+        }
+        
+        .project-tab {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .project-tab:hover {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+        
+        .project-tab.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .editor-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .editor-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .editor-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Adi-CodeVerse</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="editor.html">Editor</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" onclick="logout()" class="btn btn-danger">Logout</a></li>
+                <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Editor Header -->
+    <div class="editor-header">
+        <div class="editor-header-content">
+            <div>
+                <h2>Code Playground</h2>
+                <p>Write HTML, CSS, and JavaScript code</p>
+            </div>
+            <div class="editor-actions">
+                <button class="btn btn-secondary" onclick="saveProject()" id="saveButton">💾 Save Project</button>
+                <button class="btn btn-secondary" onclick="loadProjects()">📁 Load Projects</button>
+                <button class="btn" onclick="runFullCode()" id="runButton">▶️ Run Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Tabs -->
+    <div class="project-tabs" id="projectTabs">
+        <div class="project-tab active" onclick="switchTab('html')">HTML</div>
+        <div class="project-tab" onclick="switchTab('css')">CSS</div>
+        <div class="project-tab" onclick="switchTab('js')">JavaScript</div>
+    </div>
+
+    <!-- Editor Section -->
+    <section class="editor-container">
+        <div class="container">
+            <div class="editor-layout">
+                <!-- HTML Code Section -->
+                <div class="code-section" id="htmlSection">
+                    <h3>📄 HTML</h3>
+                    <textarea id="htmlCode" class="code-textarea" placeholder="Write your HTML code here...&#10;&#10;Example:&#10;&lt;h1&gt;Hello World&lt;/h1&gt;&#10;&lt;p&gt;Welcome to Adi-CodeVerse!&lt;/p&gt;"><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project</title>
+</head>
+<body>
+    <h1>Welcome to Adi-CodeVerse!</h1>
+    <p>Start coding amazing projects...</p>
+    <button onclick="showMessage()">Click Me!</button>
+</body>
+</html></textarea>
+                </div>
+
+                <!-- CSS Code Section -->
+                <div class="code-section" id="cssSection">
+                    <h3>🎨 CSS</h3>
+                    <textarea id="cssCode" class="code-textarea" placeholder="Write your CSS code here...&#10;&#10;Example:&#10;body {&#10;    font-family: Arial, sans-serif;&#10;    background: #f0f0f0;&#10;}&#10;&#10;h1 {&#10;    color: #333;&#10;}">body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+button:hover {
+    background: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}</textarea>
+                </div>
+
+                <!-- JavaScript Code Section -->
+                <div class="code-section" id="jsSection">
+                    <h3>⚡ JavaScript</h3>
+                    <textarea id="jsCode" class="code-textarea" placeholder="Write your JavaScript code here...&#10;&#10;Example:&#10;function showMessage() {&#10;    alert('Hello, World!');&#10;}&#10;&#10;console.log('Code is running!');">function showMessage() {
+    const messages = [
+        '🚀 Welcome to Adi-CodeVerse!',
+        '💻 Keep coding, keep growing!',
+        '⭐ You\'re doing amazing!',
+        '🎯 One step closer to mastery!',
+        '🔥 Code on, developer!'
+    ];
+    
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    
+    // Create a nice notification instead of alert
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4CAF50;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = randomMessage;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Add some interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎉 Welcome to the Adi-CodeVerse Editor!');
+    console.log('💡 Tip: Press Ctrl+Enter to run your code instantly!');
+});</textarea>
+                </div>
+
+                <!-- Output Section -->
+                <div class="output-section">
+                    <h3>🖥️ Output Preview</h3>
+                    <iframe id="outputFrame" class="output-iframe-accessible" title="Code Output Preview"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Adi-CodeVerse. All rights reserved.</p>
+            <p>💡 Tip: Press Ctrl+Enter to run code, Ctrl+S to save project</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Tab switching functionality
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.project-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Focus on corresponding textarea
+            if (tab === 'html') {
+                document.getElementById('htmlCode').focus();
+            } else if (tab === 'css') {
+                document.getElementById('cssCode').focus();
+            } else if (tab === 'js') {
+                document.getElementById('jsCode').focus();
+            }
+        }
+
+        // Auto-run code on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                runFullCode();
+            }, 1000);
+        });
+
+        // Add syntax highlighting placeholder (visual feedback)
+        document.querySelectorAll('.code-textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.borderColor = 'var(--accent)';
+                setTimeout(() => {
+                    this.style.borderColor = 'var(--border)';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>

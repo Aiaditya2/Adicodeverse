@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs - Adi-CodeVerse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Adi-CodeVerse</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="editor.html">Editor</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="jobs.html" class="btn">Jobs</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Jobs Section -->
+    <section class="dashboard">
+        <div class="container">
+            <div class="welcome-section">
+                <h1>💼 Developer Jobs</h1>
+                <p>Find your dream job in the tech industry. Browse opportunities from top companies!</p>
+            </div>
+
+            <!-- Search Filter -->
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="jobSearch" class="search-input" placeholder="Search jobs by title, company, or skills..." oninput="filterJobs()">
+            </div>
+
+            <!-- Job Grid -->
+            <div id="jobsContainer" class="job-grid">
+                <!-- Jobs will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Adi-CodeVerse. All rights reserved.</p>
+            <p>Build Your Career in One Universe 🚀</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="chatbot.js"></script>
+    <script>
+        // Jobs data
+        const jobsData = [
+            {
+                id: 1,
+                title: "Frontend Developer",
+                company: "TechCorp Solutions",
+                location: "Remote",
+                type: "Full-time",
+                experience: "2-3 years",
+                skills: ["React", "TypeScript", "CSS", "JavaScript"],
+                description: "We're looking for a talented Frontend Developer to join our growing team. You'll work on modern web applications using React and TypeScript.",
+                posted: "2024-01-15"
+            },
+            {
+                id: 2,
+                title: "Full Stack Developer",
+                company: "Digital Innovations Inc",
+                location: "San Francisco, CA",
+                type: "Full-time",
+                experience: "3-5 years",
+                skills: ["Node.js", "React", "MongoDB", "AWS"],
+                description: "Join our team to build scalable web applications. Experience with MERN stack and cloud deployment required.",
+                posted: "2024-01-14"
+            },
+            {
+                id: 3,
+                title: "JavaScript Developer",
+                company: "StartupHub",
+                location: "New York, NY",
+                type: "Full-time",
+                experience: "1-2 years",
+                skills: ["JavaScript", "ES6+", "HTML", "CSS"],
+                description: "Looking for passionate JavaScript developers to help build innovative products. Great opportunity for growth!",
+                posted: "2024-01-13"
+            },
+            {
+                id: 4,
+                title: "React Developer",
+                company: "WebCraft Agency",
+                location: "Remote",
+                type: "Contract",
+                experience: "2+ years",
+                skills: ["React", "Redux", "REST APIs", "Git"],
+                description: "We need a React expert to work on client projects. Strong understanding of state management and component architecture.",
+                posted: "2024-01-12"
+            },
+            {
+                id: 5,
+                title: "UI/UX Designer",
+                company: "Creative Studios",
+                location: "Los Angeles, CA",
+                type: "Full-time",
+                experience: "2-4 years",
+                skills: ["Figma", "Adobe XD", "Prototyping", "User Research"],
+                description: "Join our design team to create beautiful and functional user interfaces for web and mobile applications.",
+                posted: "2024-01-11"
+            },
+            {
+                id: 6,
+                title: "Backend Developer",
+                company: "DataFlow Systems",
+                location: "Austin, TX",
+                type: "Full-time",
+                experience: "3+ years",
+                skills: ["Python", "Django", "PostgreSQL", "Docker"],
+                description: "Seeking experienced Backend Developer to build and maintain robust server-side applications and APIs.",
+                posted: "2024-01-10"
+            }
+        ];
+
+        let currentJobs = [...jobsData];
+
+        function loadJobs() {
+            const container = document.getElementById('jobsContainer');
+            
+            if (currentJobs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💼</div>
+                        <h3>No jobs found</h3>
+                        <p>Try adjusting your search criteria or check back later!</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = currentJobs.map(job => `
+                    <div class="job-card" data-job-id="${job.id}">
+                        <div class="job-header">
+                            <h3 class="job-title">${job.title}</h3>
+                            <div class="job-company">${job.company}</div>
+                        </div>
+                        <div class="job-meta">
+                            <span class="job-tag">📍 ${job.location}</span>
+                            <span class="job-tag">💼 ${job.type}</span>
+                            <span class="job-tag">📊 ${job.experience}</span>
+                        </div>
+                        <div class="job-description">${job.description}</div>
+                        <div class="job-meta">
+                            <strong>Skills:</strong> ${job.skills.map(skill => `<span class="job-tag">${skill}</span>`).join(' ')}
+                        </div>
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <button class="btn" onclick="applyForJob(${job.id})">Apply Now</button>
+                        </div>
+                        <div style="margin-top: 0.5rem; text-align: center; color: var(--text-secondary); font-size: 0.85rem;">
+                            Posted: ${new Date(job.posted).toLocaleDateString()}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function filterJobs() {
+            const searchTerm = document.getElementById('jobSearch').value.toLowerCase();
+            
+            if (!searchTerm) {
+                currentJobs = [...jobsData];
+            } else {
+                currentJobs = jobsData.filter(job => 
+                    job.title.toLowerCase().includes(searchTerm) ||
+                    job.company.toLowerCase().includes(searchTerm) ||
+                    job.skills.some(skill => skill.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            loadJobs();
+        }
+
+        function applyForJob(jobId) {
+            const user = checkAuth();
+            if (!user) {
+                showToast('Please login to apply for jobs', 'error');
+                return;
+            }
+
+            const job = jobsData.find(j => j.id === jobId);
+            if (job) {
+                // Save application
+                const applications = JSON.parse(localStorage.getItem('jobApplications') || '[]');
+                const application = {
+                    id: Date.now(),
+                    jobId: jobId,
+                    jobTitle: job.title,
+                    company: job.company,
+                    username: user.username,
+                    appliedAt: new Date().toISOString()
+                };
+                
+                // Check if already applied
+                if (applications.some(app => app.jobId === jobId && app.username === user.username)) {
+                    showToast('You have already applied for this position', 'error');
+                    return;
+                }
+                
+                applications.push(application);
+                localStorage.setItem('jobApplications', JSON.stringify(applications));
+                
+                showToast(`Successfully applied for ${job.title} at ${job.company}! 🎉`, 'success');
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobs();
+        });
+    </script>
+</body>
+</html>

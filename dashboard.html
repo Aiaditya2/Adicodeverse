@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Adi-CodeVerse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">Adi-CodeVerse</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="editor.html">Editor</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="learn.html">Learn</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><button class="theme-toggle" onclick="toggleTheme()">🌙</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard">
+        <div class="container">
+            <div class="welcome-section">
+                <h1 id="welcomeMessage">Welcome back!</h1>
+                <p>Ready to build something amazing today?</p>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search projects..." oninput="searchProjects()">
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>📁 My Projects</h3>
+                    <p>View and manage your coding projects. Save your work and continue building amazing applications.</p>
+                    <button class="btn btn-secondary" onclick="navigateTo('editor.html')">Create New Project</button>
+                    <div id="projectsList" class="dashboard-card-content">
+                        <!-- Projects will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>📚 Courses</h3>
+                    <p>Access our comprehensive coding courses and tutorials. Learn new programming languages and frameworks.</p>
+                    <button class="btn btn-secondary">Browse Courses</button>
+                    <div class="dashboard-card-content">
+                        <small>🚀 Coming Soon</small>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🏆 Challenges</h3>
+                    <p>Test your skills with coding challenges. Compete with other developers and earn badges.</p>
+                    <button class="btn btn-secondary">View Challenges</button>
+                    <div class="dashboard-card-content">
+                        <small>🚀 Coming Soon</small>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>👥 Community</h3>
+                    <p>Connect with fellow developers, share your projects, get feedback, and collaborate on exciting ideas.</p>
+                    <button class="btn btn-secondary">Join Community</button>
+                    <div class="dashboard-card-content">
+                        <small>🚀 Coming Soon</small>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>📊 Statistics</h3>
+                    <p>Track your coding progress, view your achievements, and monitor your learning journey.</p>
+                    <div class="dashboard-card-content">
+                        <div class="stats-row">
+                            <span>Projects Created:</span>
+                            <span id="projectCount">0</span>
+                        </div>
+                        <div class="stats-row">
+                            <span>Member Since:</span>
+                            <span id="memberSince">Today</span>
+                        </div>
+                        <div class="stats-row">
+                            <span>Current Streak:</span>
+                            <span>🔥 1 day</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>⚡ Quick Actions</h3>
+                    <p>Quick access to your most used features and recent activities.</p>
+                    <div class="quick-actions">
+                        <button class="btn btn-secondary" onclick="navigateTo('editor.html')">Open Editor</button>
+                        <button class="btn btn-secondary" onclick="loadProjects()">Refresh Projects</button>
+                        <button class="btn btn-secondary" onclick="showToast('Settings coming soon!', 'error')">Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Adi-CodeVerse. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Load user data and projects when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadProjects();
+            updateStatistics();
+        });
+
+        function updateStatistics() {
+            const user = JSON.parse(localStorage.getItem('adiCodeverseCurrentUser') || '{}');
+            const projects = JSON.parse(localStorage.getItem('adiCodeverseProjects') || '[]');
+            const userProjects = projects.filter(p => p.username === user.username);
+            
+            document.getElementById('projectCount').textContent = userProjects.length;
+            
+            if (user.loginTime) {
+                const loginDate = new Date(user.loginTime);
+                document.getElementById('memberSince').textContent = loginDate.toLocaleDateString();
+            }
+        }
+    </script>
+</body>
+</html>
